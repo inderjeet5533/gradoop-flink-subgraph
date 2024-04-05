@@ -33,7 +33,7 @@ public class DataSetImpl<T> implements DataSet<T> {
 
     @Override
     public <T2> JoinedStreams<T, T2> join(DataStream<T2> otherStream) {
-        return new JoinedStreams(internalStream, otherStream);
+        return internalStream.join(otherStream);
     }
 
     @Override
