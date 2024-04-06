@@ -4,7 +4,8 @@ DataSet API usage with the DataStream API
 ## Work Done
 1. Create Skeleton.
 2. Understand work of DataSet and DataStream API.
-3. DataSet functions used in SubGraph class implemented with DataStream.
+3. DataSet functions used in SubGraph, Transformation, Grouping, class implemented with DataStream.
+
 
 ## Next Steps
 
