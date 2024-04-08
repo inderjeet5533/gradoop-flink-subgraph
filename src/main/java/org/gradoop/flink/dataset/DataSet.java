@@ -3,35 +3,43 @@ package org.gradoop.flink.dataset;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.common.operators.Keys;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.api.dag.Transformation;
+import org.apache.flink.api.java.Utils;
 import org.apache.flink.api.java.functions.KeySelector;
+import org.apache.flink.api.java.operators.DistinctOperator;
 import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.streaming.api.datastream.*;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 public abstract class DataSet<T> {//implements DataSet<T> {
 
-    private final StreamExecutionEnvironment env;
+    //    private final StreamExecutionEnvironment env;
     private final DataStream<T> internalStream;
-    private final TypeInformation<T> typeInfo;
+//    private final TypeInformation<T> typeInfo;
+//
+//    public DataSet(StreamExecutionEnvironment env, DataStream<T> internalStream, TypeInformation<T> typeInfo) {
+//        this.env = env;
+//        this.internalStream = internalStream;
+//        this.typeInfo = typeInfo;
+//    }
 
-    public DataSet(StreamExecutionEnvironment env, DataStream<T> internalStream, TypeInformation<T> typeInfo) {
-        this.env = env;
+    public DataSet(DataStream<T> internalStream) {
         this.internalStream = internalStream;
-        this.typeInfo = typeInfo;
     }
 
-    public StreamExecutionEnvironment getEnv() {
-        return env;
-    }
+//    public StreamExecutionEnvironment getEnv() {
+//        return env;
+//    }
 
     public DataStream<T> getInternalStream() {
         return internalStream;
     }
 
-    public TypeInformation<T> getTypeInfo() {
-        return typeInfo;
-    }
+//    public TypeInformation<T> getTypeInfo() {
+//        return typeInfo;
+//    }
 
 //    @Override
     public SingleOutputStreamOperator<T> filter(FilterFunction<T> filter) {
@@ -56,6 +64,15 @@ public abstract class DataSet<T> {//implements DataSet<T> {
     public <K> KeyedStream<T, K> distinct(KeySelector<T, K> key) {
         return internalStream.keyBy(key);
     }
+
+    public KeyedStream<T, Tuple> distinct(int... fields) {
+        return internalStream.keyBy(fields);
+    }
+
+    public KeyedStream<T, Tuple> distinct(String... fields) {
+        return internalStream.keyBy(fields);
+    }
+
 
 //    @Override
     public <R> SingleOutputStreamOperator<R> map(MapFunction<T, R> mapper) {
