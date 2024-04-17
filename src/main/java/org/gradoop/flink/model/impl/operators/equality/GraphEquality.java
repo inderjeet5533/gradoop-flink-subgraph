@@ -15,7 +15,10 @@
  */
 package org.gradoop.flink.model.impl.operators.equality;
 
+//import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.DataSet;
+import org.apache.flink.streaming.api.datastream.DataStream;
+//import org.gradoop.flink.dataset.DataSet;
 import org.gradoop.common.model.api.entities.Edge;
 import org.gradoop.common.model.api.entities.GraphHead;
 import org.gradoop.common.model.api.entities.Vertex;
@@ -72,7 +75,7 @@ public class GraphEquality<
   }
 
   @Override
-  public DataSet<Boolean> execute(LG firstGraph, LG secondGraph) {
+  public DataStream<Boolean> execute(LG firstGraph, LG secondGraph) {
     BaseGraphCollectionFactory<G, V, E, LG, GC> collectionFactory = firstGraph.getCollectionFactory();
     return collectionEquality
       .execute(collectionFactory.fromGraph(firstGraph), collectionFactory.fromGraph(secondGraph));

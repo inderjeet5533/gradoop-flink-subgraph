@@ -15,8 +15,14 @@
  */
 package org.gradoop.flink.model;
 
-import org.apache.flink.api.java.DataSet;
-import org.apache.flink.api.java.ExecutionEnvironment;
+//import org.apache.flink.api.java.DataSet;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.gradoop.flink.dataset.DataSet;
+//import org.apache.flink.api.java.ExecutionEnvironment;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.configuration.Configuration;
+import org.apache.flink.runtime.testutils.MiniClusterResourceConfiguration;
+import org.apache.flink.test.util.MiniClusterWithClientResource;
 import org.gradoop.common.GradoopTestUtils;
 import org.gradoop.common.model.impl.pojo.EPGMEdge;
 import org.gradoop.common.model.impl.pojo.EPGMGraphHead;
@@ -32,6 +38,7 @@ import org.gradoop.flink.model.impl.layouts.gve.GVECollectionLayoutFactory;
 import org.gradoop.flink.model.impl.layouts.gve.GVEGraphLayoutFactory;
 import org.gradoop.flink.util.FlinkAsciiGraphLoader;
 import org.gradoop.flink.util.GradoopFlinkConfig;
+import org.junit.ClassRule;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,13 +55,13 @@ public abstract class GradoopFlinkTestBase {
 
   private static final long TASKMANAGER_MEMORY_SIZE_MB = 512;
 
-//  @ClassRule
-//  public static MiniClusterWithClientResource miniClusterResource = getMiniCluster();
+  @ClassRule
+  public static MiniClusterWithClientResource miniClusterResource = getMiniCluster();
 
   /**
    * Flink Execution Environment
    */
-  private ExecutionEnvironment env;
+  private StreamExecutionEnvironment env;
 
   /**
    * Gradoop Flink configuration
@@ -75,7 +82,7 @@ public abstract class GradoopFlinkTestBase {
    * Creates a new instance of {@link GradoopFlinkTestBase}.
    */
   public GradoopFlinkTestBase() {
-    this.env = ExecutionEnvironment.getExecutionEnvironment();
+    this.env = StreamExecutionEnvironment.getExecutionEnvironment();
     this.graphLayoutFactory = new GVEGraphLayoutFactory();
     this.collectionLayoutFactory = new GVECollectionLayoutFactory();
   }
@@ -85,7 +92,7 @@ public abstract class GradoopFlinkTestBase {
    *
    * @return Flink execution environment
    */
-  protected ExecutionEnvironment getExecutionEnvironment() {
+  protected StreamExecutionEnvironment getExecutionEnvironment() {
     return env;
   }
 
@@ -117,25 +124,25 @@ public abstract class GradoopFlinkTestBase {
 //  //----------------------------------------------------------------------------
 //  // Cluster related
 //  //----------------------------------------------------------------------------
-//
-//  /**
-//   * Custom test cluster start routine,
-//   * workaround to set TASK_MANAGER_MEMORY_SIZE.
-//   *
-//   * TODO: remove, when future issue is fixed
-//   * {@see http://mail-archives.apache.org/mod_mbox/flink-dev/201511.mbox/%3CCAC27z=PmPMeaiNkrkoxNFzoR26BOOMaVMghkh1KLJFW4oxmUmw@mail.gmail.com%3E}
-//   */
-//  private static MiniClusterWithClientResource getMiniCluster() {
-//    Configuration config = new Configuration();
-//    config.setLong("taskmanager.memory.size", TASKMANAGER_MEMORY_SIZE_MB);
-//
-//    return new MiniClusterWithClientResource(
-//      new MiniClusterResourceConfiguration.Builder()
-//        .setNumberTaskManagers(1)
-//        .setNumberSlotsPerTaskManager(DEFAULT_PARALLELISM)
-//        .setConfiguration(config).build());
-//  }
-//
+
+  /**
+   * Custom test cluster start routine,
+   * workaround to set TASK_MANAGER_MEMORY_SIZE.
+   *
+   * TODO: remove, when future issue is fixed
+   * {@see http://mail-archives.apache.org/mod_mbox/flink-dev/201511.mbox/%3CCAC27z=PmPMeaiNkrkoxNFzoR26BOOMaVMghkh1KLJFW4oxmUmw@mail.gmail.com%3E}
+   */
+  private static MiniClusterWithClientResource getMiniCluster() {
+    Configuration config = new Configuration();
+    config.setLong("taskmanager.memory.size", TASKMANAGER_MEMORY_SIZE_MB);
+
+    return new MiniClusterWithClientResource(
+      new MiniClusterResourceConfiguration.Builder()
+        .setNumberTaskManagers(1)
+        .setNumberSlotsPerTaskManager(DEFAULT_PARALLELISM)
+        .setConfiguration(config).build());
+  }
+
 //  //----------------------------------------------------------------------------
 //  // Data generation
 //  //----------------------------------------------------------------------------
@@ -187,7 +194,7 @@ public abstract class GradoopFlinkTestBase {
   // Test helper
   //----------------------------------------------------------------------------
 
-  protected void collectAndAssertTrue(DataSet<Boolean> result) throws Exception {
+  protected void collectAndAssertTrue(DataStream<Boolean> result) throws Exception {
     assertTrue("expected true", result.collect().get(0));
   }
 

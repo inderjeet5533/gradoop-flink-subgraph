@@ -22,6 +22,7 @@ import org.gradoop.common.util.AsciiGraphLoader;
 import org.gradoop.common.util.GradoopConstants;
 import org.gradoop.flink.model.impl.epgm.LogicalGraph;
 import org.gradoop.flink.model.impl.epgm.LogicalGraphFactory;
+import org.gradoop.flink.model.impl.functions.epgm.RenameLabel;
 //import org.gradoop.flink.model.impl.epgm.GraphCollection;
 //import org.gradoop.flink.model.impl.functions.epgm.RenameLabel;
 
@@ -137,15 +138,15 @@ public class FlinkAsciiGraphLoader {
    */
   public LogicalGraph getLogicalGraph(boolean withGraphContainment) {
     final LogicalGraphFactory factory = config.getLogicalGraphFactory();
-//    if (withGraphContainment) {
-////      return factory.fromCollections(getVertices(), getEdges())
-////        .transformGraphHead(new RenameLabel<>(GradoopConstants.DEFAULT_GRAPH_LABEL,
-////          GradoopConstants.DB_GRAPH_LABEL));
-//    } else {
+    if (withGraphContainment) {
+      return factory.fromCollections(getVertices(), getEdges())
+        .transformGraphHead(new RenameLabel<>(GradoopConstants.DEFAULT_GRAPH_LABEL,
+          GradoopConstants.DB_GRAPH_LABEL));
+    } else {
       EPGMGraphHead graphHead = factory.getGraphHeadFactory()
         .createGraphHead(GradoopConstants.DB_GRAPH_LABEL);
       return factory.fromCollections(graphHead, getVertices(), getEdges());
-//    }
+    }
   }
 
   /**

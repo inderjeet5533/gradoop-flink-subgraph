@@ -17,7 +17,9 @@ package org.gradoop.flink.model.api.epgm;
 
 import com.google.common.collect.Lists;
 import org.apache.flink.api.common.functions.FilterFunction;
-import org.apache.flink.api.java.DataSet;
+//import org.apache.flink.api.java.DataSet;
+import org.apache.flink.streaming.api.datastream.DataStream;
+//import org.gradoop.flink.dataset.DataSet;
 import org.apache.flink.api.java.operators.Grouping;
 import org.gradoop.common.model.api.entities.Edge;
 import org.gradoop.common.model.api.entities.GraphHead;
@@ -27,6 +29,7 @@ import org.gradoop.common.model.api.entities.Vertex;
 //import org.gradoop.flink.model.api.functions.TransformationFunction;
 //import org.gradoop.flink.model.api.functions.VertexAggregateFunction;
 import org.gradoop.flink.model.api.functions.AggregateFunction;
+import org.gradoop.flink.model.api.functions.TransformationFunction;
 import org.gradoop.flink.model.api.operators.*;
 //import org.gradoop.flink.model.impl.functions.epgm.PropertyGetter;
 //import org.gradoop.flink.model.impl.operators.aggregation.Aggregation;
@@ -52,6 +55,7 @@ import org.gradoop.flink.model.impl.operators.subgraph.Subgraph;
 import org.gradoop.flink.model.impl.operators.tostring.functions.EdgeToDataString;
 import org.gradoop.flink.model.impl.operators.tostring.functions.GraphHeadToDataString;
 import org.gradoop.flink.model.impl.operators.tostring.functions.VertexToDataString;
+import org.gradoop.flink.model.impl.operators.transformation.Transformation;
 import org.gradoop.flink.model.impl.operators.verify.Verify;
 //import org.gradoop.flink.model.impl.operators.verify.VerifyGraphContainment;
 
@@ -299,37 +303,37 @@ public interface BaseGraphOperators<
 //  default LG sample(SamplingAlgorithm<G, V, E, LG, GC> algorithm) {
 //    return callForGraph(algorithm);
 //  }
-//
-//  /**
-//   * Transforms the elements of the base graph using the given transformation functions.
-//   * The identity of the elements is preserved.
-//   *
-//   * @param graphHeadTransformationFunction graph head transformation function
-//   * @param vertexTransformationFunction    vertex transformation function
-//   * @param edgeTransformationFunction      edge transformation function
-//   * @return transformed base graph
-//   */
-//  default LG transform(
-//    TransformationFunction<G> graphHeadTransformationFunction,
-//    TransformationFunction<V> vertexTransformationFunction,
-//    TransformationFunction<E> edgeTransformationFunction) {
-//    return callForGraph(new Transformation<>(
-//      graphHeadTransformationFunction,
-//      vertexTransformationFunction,
-//      edgeTransformationFunction));
-//  }
-//
-//  /**
-//   * Transforms the graph head of the base graph using the given
-//   * transformation function. The identity of the graph is preserved.
-//   *
-//   * @param graphHeadTransformationFunction graph head transformation function
-//   * @return transformed base graph
-//   */
-//  default LG transformGraphHead(TransformationFunction<G> graphHeadTransformationFunction) {
-//    return transform(graphHeadTransformationFunction, null, null);
-//  }
-//
+
+  /**
+   * Transforms the elements of the base graph using the given transformation functions.
+   * The identity of the elements is preserved.
+   *
+   * @param graphHeadTransformationFunction graph head transformation function
+   * @param vertexTransformationFunction    vertex transformation function
+   * @param edgeTransformationFunction      edge transformation function
+   * @return transformed base graph
+   */
+  default LG transform(
+    TransformationFunction<G> graphHeadTransformationFunction,
+    TransformationFunction<V> vertexTransformationFunction,
+    TransformationFunction<E> edgeTransformationFunction) {
+    return callForGraph(new Transformation<>(
+      graphHeadTransformationFunction,
+      vertexTransformationFunction,
+      edgeTransformationFunction));
+  }
+
+  /**
+   * Transforms the graph head of the base graph using the given
+   * transformation function. The identity of the graph is preserved.
+   *
+   * @param graphHeadTransformationFunction graph head transformation function
+   * @return transformed base graph
+   */
+  default LG transformGraphHead(TransformationFunction<G> graphHeadTransformationFunction) {
+    return transform(graphHeadTransformationFunction, null, null);
+  }
+
 //  /**
 //   * Transforms the vertices of the base graph using the given transformation
 //   * function. The identity of the vertices is preserved.
@@ -545,7 +549,7 @@ public interface BaseGraphOperators<
    * @param other other graph
    * @return 1-element dataset containing true, iff equal by element data
    */
-  default DataSet<Boolean> equalsByData(LG other) {
+  default DataStream<Boolean> equalsByData(LG other) {
     return callForValue(new GraphEquality<>(
       new GraphHeadToDataString<>(),
       new VertexToDataString<>(),

@@ -15,7 +15,8 @@
  */
 package org.gradoop.flink.model.impl.epgm;
 
-import org.apache.flink.api.java.DataSet;
+//import org.apache.flink.api.java.DataSet;
+import org.gradoop.flink.dataset.DataSet;
 import org.gradoop.common.model.impl.pojo.EPGMEdge;
 import org.gradoop.common.model.impl.pojo.EPGMGraphHead;
 import org.gradoop.common.model.impl.pojo.EPGMVertex;

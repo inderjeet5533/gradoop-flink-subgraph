@@ -2,6 +2,7 @@ package org.gradoop.flink.dataset;
 
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.api.common.functions.GroupReduceFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.operators.Keys;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
@@ -9,11 +10,16 @@ import org.apache.flink.api.dag.Transformation;
 import org.apache.flink.api.java.Utils;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.operators.DistinctOperator;
+import org.apache.flink.api.java.operators.GroupReduceOperator;
 import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.streaming.api.datastream.*;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.windowing.WindowFunction;
+import org.apache.flink.streaming.api.windowing.windows.Window;
+import org.apache.flink.util.Collector;
+import org.gradoop.flink.EndOfStreamWindows;
 
-public abstract class DataSet<T> {//implements DataSet<T> {
+public class DataSet<T> {//implements DataSet<T> {
 
     //    private final StreamExecutionEnvironment env;
     private final DataStream<T> internalStream;
@@ -56,8 +62,8 @@ public abstract class DataSet<T> {//implements DataSet<T> {
     }
 
 //    @Override
-    public DataStream<T> union(DataStream<T>... streams) {
-        return internalStream.union(streams);
+    public DataSet<T> union(DataStream<T>... streams) {
+        return new DataSet(internalStream.union(streams));
     }
 
 //    @Override
@@ -102,6 +108,17 @@ public abstract class DataSet<T> {//implements DataSet<T> {
 //    @Override
     public <T2> CoGroupedStreams<T, T2> leftOuterJoin(DataSet<T2> other) {
         return internalStream.coGroup(other.getInternalStream());
+    }
+
+    public <R> GroupReduceOperator<T, R> reduceGroup(GroupReduceFunction<T, R> reducer) {
+        return internalStream.windowAll(EndOfStreamWindows.get())
+                .apply(new WindowFunction<>(){
+                    @Override
+                    public void apply(Object o, Window window, Iterable iterable, Collector collector) throws Exception {
+
+                    }
+                    // implement user-defined group reduce logic
+                });
     }
 
 }

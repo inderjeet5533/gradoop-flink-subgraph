@@ -15,7 +15,8 @@
  */
 package org.gradoop.flink.model.api.layouts;
 
-import org.apache.flink.api.java.DataSet;
+//import org.apache.flink.api.java.DataSet;
+import org.gradoop.flink.dataset.DataSet;
 import org.gradoop.common.model.api.entities.Edge;
 import org.gradoop.common.model.api.entities.Vertex;
 

@@ -17,6 +17,8 @@ package org.gradoop.flink.model.impl.operators.tostring.functions;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.api.common.functions.GroupReduceFunction;
+import org.apache.flink.streaming.api.functions.windowing.WindowFunction;
+import org.apache.flink.streaming.api.windowing.windows.Window;
 import org.apache.flink.util.Collector;
 import org.gradoop.flink.model.impl.operators.tostring.tuples.GraphHeadString;
 
@@ -31,7 +33,7 @@ import static org.gradoop.flink.model.impl.operators.tostring.CanonicalAdjacency
  * collection
  */
 public class ConcatGraphHeadStrings
-  implements GroupReduceFunction<GraphHeadString, String> {
+  implements GroupReduceFunction<GraphHeadString, String>, WindowFunction<GraphHeadString, String> {
 
   @Override
   public void reduce(Iterable<GraphHeadString> graphHeadLabels,
@@ -49,5 +51,10 @@ public class ConcatGraphHeadStrings
     Collections.sort(graphLabels);
 
     collector.collect(StringUtils.join(graphLabels, LINE_SEPARATOR));
+  }
+
+  @Override
+  public void apply(Object o, Window window, Iterable iterable, Collector collector) throws Exception {
+
   }
 }

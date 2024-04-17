@@ -16,6 +16,7 @@
 package org.gradoop.flink.util;
 
 import org.apache.flink.api.java.ExecutionEnvironment;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.gradoop.common.config.GradoopConfig;
 import org.gradoop.common.model.impl.pojo.EPGMEdge;
 import org.gradoop.common.model.impl.pojo.EPGMGraphHead;
@@ -47,7 +48,11 @@ public class GradoopFlinkConfig extends GradoopConfig<EPGMGraphHead, EPGMVertex,
   /**
    * Flink execution environment.
    */
-  private final ExecutionEnvironment executionEnvironment;
+//  private final ExecutionEnvironment executionEnvironment;
+  /**
+   * Flink stream execution environment.
+   */
+  private final StreamExecutionEnvironment executionEnvironment;
 
   /**
    * Creates instances of {@link LogicalGraph}
@@ -69,7 +74,8 @@ public class GradoopFlinkConfig extends GradoopConfig<EPGMGraphHead, EPGMVertex,
    * @param graphCollectionLayoutFactory Factory for creating graph collections
    */
   protected GradoopFlinkConfig(
-    ExecutionEnvironment executionEnvironment,
+//    ExecutionEnvironment executionEnvironment,
+    StreamExecutionEnvironment executionEnvironment,
     LogicalGraphLayoutFactory<EPGMGraphHead, EPGMVertex, EPGMEdge> logicalGraphLayoutFactory,
     GraphCollectionLayoutFactory<EPGMGraphHead, EPGMVertex, EPGMEdge> graphCollectionLayoutFactory
   ) {
@@ -110,7 +116,9 @@ public class GradoopFlinkConfig extends GradoopConfig<EPGMGraphHead, EPGMVertex,
    * @param graphCollectionLayoutFactory factory to create graph collection layouts
    * @return Gradoop Flink configuration
    */
-  public static GradoopFlinkConfig createConfig(ExecutionEnvironment env,
+  public static GradoopFlinkConfig createConfig(
+//          ExecutionEnvironment env,
+          StreamExecutionEnvironment env,
     LogicalGraphLayoutFactory<EPGMGraphHead, EPGMVertex, EPGMEdge> logicalGraphLayoutFactory,
     GraphCollectionLayoutFactory<EPGMGraphHead, EPGMVertex, EPGMEdge> graphCollectionLayoutFactory) {
     return new GradoopFlinkConfig(env, logicalGraphLayoutFactory, graphCollectionLayoutFactory);
@@ -121,7 +129,11 @@ public class GradoopFlinkConfig extends GradoopConfig<EPGMGraphHead, EPGMVertex,
    *
    * @return Flink execution environment
    */
-  public ExecutionEnvironment getExecutionEnvironment() {
+//  public ExecutionEnvironment getExecutionEnvironment() {
+//    return executionEnvironment;
+//  }
+
+  public StreamExecutionEnvironment getExecutionEnvironment() {
     return executionEnvironment;
   }
 

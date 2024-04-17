@@ -16,7 +16,8 @@
 package org.gradoop.flink.model.api.epgm;
 
 import org.apache.flink.api.common.functions.GroupReduceFunction;
-import org.apache.flink.api.java.DataSet;
+//import org.apache.flink.api.java.DataSet;
+import org.gradoop.flink.dataset.DataSet;
 import org.gradoop.common.model.api.entities.Edge;
 import org.gradoop.common.model.api.entities.ElementFactoryProvider;
 import org.gradoop.common.model.api.entities.GraphHead;

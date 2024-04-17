@@ -128,12 +128,14 @@
             <artifactId>flink-shaded-hadoop-2</artifactId>
 	    </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.flink/flink-streaming-java -->
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-streaming-java</artifactId>
-            <version>1.19.0</version>
+            <artifactId>flink-streaming-java_2.11</artifactId>
+            <version>1.9.3</version>
             <scope>provided</scope>
         </dependency>
+
 
         <!-- Parquet -->
         <dependency>

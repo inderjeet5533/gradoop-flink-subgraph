@@ -16,7 +16,8 @@
 package org.gradoop.flink.model.impl.operators.subgraph;
 
 import org.apache.flink.api.common.functions.FilterFunction;
-import org.apache.flink.api.java.DataSet;
+//import org.apache.flink.api.java.DataSet;
+import org.gradoop.flink.dataset.DataSet;
 import org.gradoop.common.model.api.entities.Edge;
 import org.gradoop.common.model.api.entities.GraphHead;
 import org.gradoop.common.model.api.entities.Vertex;

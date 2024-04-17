@@ -1,0 +1,2 @@
+org\gradoop\flink\model\GradoopFlinkTestBase.class
+org\gradoop\flink\model\impl\operators\subgraph\SubgraphTest.class
